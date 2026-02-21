@@ -76,7 +76,6 @@ export default function BookingPage() {
 
   return (
     <div className="max-w-lg mx-auto px-6 py-12">
-      {/* breadcrumb */}
       <nav className="mb-8 text-sm text-[var(--color-text-secondary)]">
         <Link to="/" className="hover:text-[var(--color-text-primary)] transition">
           Experts
@@ -96,7 +95,6 @@ export default function BookingPage() {
         Book a Session
       </h1>
 
-      {/* session summary */}
       <div className="bg-white border border-[var(--color-border)] rounded-2xl px-5 py-4 mb-8 text-sm">
         <p className="font-medium text-[var(--color-text-primary)]">{state.expertName}</p>
         <p className="text-[var(--color-text-secondary)] mt-0.5">
@@ -104,7 +102,6 @@ export default function BookingPage() {
         </p>
       </div>
 
-      {/* server error */}
       {error && (
         <div className="mb-6 px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm">
           {error.message}
@@ -112,31 +109,28 @@ export default function BookingPage() {
       )}
 
       <form onSubmit={handleSubmit} noValidate className="space-y-5">
-        {/* name */}
         <Field label="Full Name" error={fieldErrors.name}>
           <input
             type="text"
             name="name"
             value={form.name}
             onChange={handleChange}
-            placeholder="Aditya Kumar"
+            placeholder="Your name"
             className={inputCls(Boolean(fieldErrors.name))}
           />
         </Field>
 
-        {/* email */}
         <Field label="Email Address" error={fieldErrors.email}>
           <input
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
-            placeholder="aditya@example.com"
+            placeholder="your@email.com"
             className={inputCls(Boolean(fieldErrors.email))}
           />
         </Field>
 
-        {/* phone */}
         <Field label="Phone Number" error={fieldErrors.phone}>
           <input
             type="tel"
@@ -148,7 +142,6 @@ export default function BookingPage() {
           />
         </Field>
 
-        {/* notes */}
         <Field label="Notes (optional)">
           <textarea
             name="notes"

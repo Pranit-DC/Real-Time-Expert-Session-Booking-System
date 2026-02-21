@@ -33,7 +33,6 @@ export default function MyBookings() {
         Enter the email address you used when booking a session.
       </p>
 
-      {/* email lookup */}
       <form onSubmit={handleSubmit} className="flex gap-3 mb-10">
         <input
           type="email"
@@ -51,21 +50,18 @@ export default function MyBookings() {
         </button>
       </form>
 
-      {/* loading */}
       {isLoading && (
         <div className="flex justify-center py-12">
           <Spinner size="md" />
         </div>
       )}
 
-      {/* error */}
       {isError && (
         <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm">
           {error?.message ?? 'Failed to load bookings.'}
         </div>
       )}
 
-      {/* results */}
       {bookings && (
         <>
           {bookings.length === 0 ? (

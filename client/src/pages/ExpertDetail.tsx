@@ -5,14 +5,7 @@ import { useSocket } from '../hooks/useSocket';
 import Spinner from '../components/ui/Spinner';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import { formatDate, ratingLabel } from '../utils/format';
-
-function StarIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
-    </svg>
-  );
-}
+import { StarIcon } from '../components/ui/StarIcon';
 
 export default function ExpertDetail() {
   const { id } = useParams<{ id: string }>();
@@ -56,7 +49,6 @@ export default function ExpertDetail() {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
-      {/* breadcrumb */}
       <nav className="mb-8 text-sm text-[var(--color-text-secondary)]">
         <Link to="/" className="hover:text-[var(--color-text-primary)] transition">
           Experts
@@ -65,7 +57,6 @@ export default function ExpertDetail() {
         <span className="text-[var(--color-text-primary)]">{expert.name}</span>
       </nav>
 
-      {/* expert header */}
       <div className="flex items-start gap-5 mb-10">
         <div className="w-16 h-16 rounded-full bg-[var(--color-bg)] flex items-center justify-center flex-shrink-0 overflow-hidden border border-[var(--color-border)]">
           {expert.avatar ? (
@@ -83,7 +74,7 @@ export default function ExpertDetail() {
           <p className="text-sm text-[var(--color-text-secondary)] mt-0.5">{expert.category}</p>
           <div className="flex items-center gap-4 mt-2 text-sm">
             <span className="flex items-center gap-1 text-amber-500 font-medium">
-              <StarIcon />
+              <StarIcon size={14} />
               {ratingLabel(expert.rating)}
             </span>
             <span className="text-[var(--color-text-secondary)]">
@@ -93,10 +84,8 @@ export default function ExpertDetail() {
         </div>
       </div>
 
-      {/* bio */}
       <p className="text-[var(--color-text-primary)] text-sm leading-relaxed mb-10">{expert.bio}</p>
 
-      {/* availability */}
       <section>
         <h2 className="text-base font-semibold text-[var(--color-text-primary)] mb-4">
           Available Sessions
@@ -106,7 +95,6 @@ export default function ExpertDetail() {
           <p className="text-sm text-[var(--color-text-secondary)]">No availability listed.</p>
         ) : (
           <>
-            {/* date tabs */}
             <div className="flex gap-2 flex-wrap mb-6">
               {availability.map((avail) => {
                 const active = avail.date === activeDateStr;
@@ -127,7 +115,6 @@ export default function ExpertDetail() {
               })}
             </div>
 
-            {/* slot grid */}
             {activeAvail ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {activeAvail.slots.map((slot) => (

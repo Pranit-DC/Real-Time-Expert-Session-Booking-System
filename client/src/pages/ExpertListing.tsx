@@ -6,22 +6,9 @@ import Spinner from '../components/ui/Spinner';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import Pagination from '../components/ui/Pagination';
 import { ratingLabel } from '../utils/format';
+import { StarIcon } from '../components/ui/StarIcon';
 
 const CATEGORIES = ['All', 'ML', 'System Design', 'Frontend', 'Backend', 'DevOps'];
-
-function StarIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
-    </svg>
-  );
-}
 
 export default function ExpertListing() {
   const [page, setPage] = useState(1);
@@ -47,7 +34,6 @@ export default function ExpertListing() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
-      {/* heading */}
       <div className="mb-10">
         <h1 className="text-3xl font-semibold text-[var(--color-text-primary)] tracking-tight">
           Find an Expert
@@ -57,7 +43,6 @@ export default function ExpertListing() {
         </p>
       </div>
 
-      {/* search */}
       <div className="mb-6">
         <input
           type="search"
@@ -68,7 +53,6 @@ export default function ExpertListing() {
         />
       </div>
 
-      {/* category tabs */}
       <div className="flex gap-2 flex-wrap mb-8">
         {CATEGORIES.map((cat) => {
           const active = (cat === 'All' && !category) || cat === category;
@@ -89,7 +73,6 @@ export default function ExpertListing() {
         })}
       </div>
 
-      {/* states */}
       {isLoading && (
         <div className="flex justify-center py-24">
           <Spinner size="lg" />
@@ -103,7 +86,6 @@ export default function ExpertListing() {
         />
       )}
 
-      {/* grid */}
       {data && (
         <>
           {data.experts.length === 0 ? (
@@ -118,7 +100,6 @@ export default function ExpertListing() {
                   to={`/experts/${expert._id}`}
                   className="group block bg-white rounded-2xl border border-[var(--color-border)] p-5 hover:border-[var(--color-text-primary)]/20 hover:shadow-sm transition"
                 >
-                  {/* avatar */}
                   <div className="w-12 h-12 rounded-full bg-[var(--color-bg)] flex items-center justify-center mb-4 overflow-hidden">
                     {expert.avatar ? (
                       <img
@@ -133,7 +114,6 @@ export default function ExpertListing() {
                     )}
                   </div>
 
-                  {/* name + category */}
                   <p className="font-semibold text-[var(--color-text-primary)] text-sm leading-snug">
                     {expert.name}
                   </p>
@@ -141,15 +121,13 @@ export default function ExpertListing() {
                     {expert.category}
                   </p>
 
-                  {/* bio */}
                   <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2 mb-4 leading-relaxed">
                     {expert.bio}
                   </p>
 
-                  {/* meta row */}
                   <div className="flex items-center justify-between text-xs text-[var(--color-text-secondary)]">
                     <span className="flex items-center gap-1 text-amber-500 font-medium">
-                      <StarIcon />
+                      <StarIcon size={12} />
                       {ratingLabel(expert.rating)}
                     </span>
                     <span>{expert.experience} yr{expert.experience !== 1 ? 's' : ''}</span>
