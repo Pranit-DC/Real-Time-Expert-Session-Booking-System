@@ -4,8 +4,8 @@ import type { ExpertsResponse } from '../types';
 
 interface UseExpertsOptions {
   page: number;
-  category: string;
-  search: string;
+  category?: string;
+  search?: string;
 }
 
 const LIMIT = 8;
