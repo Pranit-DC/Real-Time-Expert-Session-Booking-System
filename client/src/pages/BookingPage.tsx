@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import { useCreateBooking } from '../hooks/useBookings';
 import { formatDate } from '../utils/format';
 
@@ -76,39 +77,71 @@ export default function BookingPage() {
 
   return (
     <div className="max-w-lg mx-auto px-6 py-12">
-      <nav className="mb-8 text-sm text-[var(--color-text-secondary)]">
-        <Link to="/" className="hover:text-[var(--color-text-primary)] transition">
+      <motion.nav
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.25 }}
+        className="mb-8 text-sm text-[var(--color-text-secondary)]"
+      >
+        <Link to="/" className="hover:text-[var(--color-text-primary)] transition-colors">
           Experts
         </Link>
         <span className="mx-2">/</span>
         <Link
           to={`/experts/${expertId}`}
-          className="hover:text-[var(--color-text-primary)] transition"
+          className="hover:text-[var(--color-text-primary)] transition-colors"
         >
           {state.expertName}
         </Link>
         <span className="mx-2">/</span>
         <span className="text-[var(--color-text-primary)]">Book Session</span>
-      </nav>
+      </motion.nav>
 
-      <h1 className="text-2xl font-semibold text-[var(--color-text-primary)] tracking-tight mb-2">
+      <motion.h1
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-2xl font-semibold text-[var(--color-text-primary)] tracking-tight mb-2"
+      >
         Book a Session
-      </h1>
+      </motion.h1>
 
-      <div className="bg-white border border-[var(--color-border)] rounded-2xl px-5 py-4 mb-8 text-sm">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.07, ease: [0.25, 0.1, 0.25, 1] }}
+        className="bg-white border border-[var(--color-border)] rounded-2xl px-5 py-4 mb-8 text-sm"
+      >
         <p className="font-medium text-[var(--color-text-primary)]">{state.expertName}</p>
         <p className="text-[var(--color-text-secondary)] mt-0.5">
           {formatDate(state.date)} · {state.timeSlot}
         </p>
-      </div>
+      </motion.div>
 
-      {error && (
-        <div className="mb-6 px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm">
-          {error.message}
-        </div>
-      )}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden mb-6"
+          >
+            <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm">
+              {error.message}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <form onSubmit={handleSubmit} noValidate className="space-y-5">
+      <motion.form
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.12, ease: [0.25, 0.1, 0.25, 1] }}
+        onSubmit={handleSubmit}
+        noValidate
+        className="space-y-5"
+      >
         <Field label="Full Name" error={fieldErrors.name}>
           <input
             type="text"
@@ -153,14 +186,15 @@ export default function BookingPage() {
           />
         </Field>
 
-        <button
+        <motion.button
           type="submit"
           disabled={isPending}
-          className="w-full py-3 rounded-xl bg-[var(--color-accent)] text-white text-sm font-semibold tracking-wide hover:opacity-90 disabled:opacity-50 transition"
+          whileTap={isPending ? undefined : { opacity: 0.8, scale: 0.995 }}
+          className="w-full py-3 rounded-xl bg-[var(--color-accent)] text-white text-sm font-semibold tracking-wide hover:opacity-90 disabled:opacity-50 transition-opacity"
         >
           {isPending ? 'Booking…' : 'Confirm Booking'}
-        </button>
-      </form>
+        </motion.button>
+      </motion.form>
     </div>
   );
 }
@@ -178,7 +212,19 @@ function Field({
     <div>
       <label className="block text-xs font-medium text-[var(--color-text-primary)] mb-1.5">{label}</label>
       {children}
-      {error && <p className="mt-1.5 text-xs text-red-500">{error}</p>}
+      <AnimatePresence>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: 'auto', marginTop: 6 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            transition={{ duration: 0.18 }}
+            className="text-xs text-red-500 overflow-hidden"
+          >
+            {error}
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

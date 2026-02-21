@@ -1,11 +1,22 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import { useExpert } from '../hooks/useExpert';
 import { useSocket } from '../hooks/useSocket';
 import Spinner from '../components/ui/Spinner';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import { formatDate, ratingLabel } from '../utils/format';
 import { StarIcon } from '../components/ui/StarIcon';
+
+const slotContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.035 } },
+};
+
+const slotItem = {
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.25, 0.1, 0.25, 1] as const } },
+};
 
 export default function ExpertDetail() {
   const { id } = useParams<{ id: string }>();
@@ -49,16 +60,26 @@ export default function ExpertDetail() {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
-      <nav className="mb-8 text-sm text-[var(--color-text-secondary)]">
-        <Link to="/" className="hover:text-[var(--color-text-primary)] transition">
+      <motion.nav
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.25 }}
+        className="mb-8 text-sm text-[var(--color-text-secondary)]"
+      >
+        <Link to="/" className="hover:text-[var(--color-text-primary)] transition-colors">
           Experts
         </Link>
         <span className="mx-2">/</span>
         <span className="text-[var(--color-text-primary)]">{expert.name}</span>
-      </nav>
+      </motion.nav>
 
-      <div className="flex items-start gap-5 mb-10">
-        <div className="w-16 h-16 rounded-full bg-[var(--color-bg)] flex items-center justify-center flex-shrink-0 overflow-hidden border border-[var(--color-border)]">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+        className="flex items-start gap-5 mb-10"
+      >
+        <div className="w-16 h-16 rounded-full bg-[var(--color-bg)] flex items-center justify-center flex-shrink-0 overflow-hidden border border-[var(--color-border)] ring-1 ring-black/5">
           {expert.avatar ? (
             <img src={expert.avatar} alt={expert.name} className="w-full h-full object-cover" />
           ) : (
@@ -82,11 +103,22 @@ export default function ExpertDetail() {
             </span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <p className="text-[var(--color-text-primary)] text-sm leading-relaxed mb-10">{expert.bio}</p>
+      <motion.p
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.08, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-[var(--color-text-primary)] text-sm leading-relaxed mb-10"
+      >
+        {expert.bio}
+      </motion.p>
 
-      <section>
+      <motion.section
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.14, ease: [0.25, 0.1, 0.25, 1] }}
+      >
         <h2 className="text-base font-semibold text-[var(--color-text-primary)] mb-4">
           Available Sessions
         </h2>
@@ -99,46 +131,70 @@ export default function ExpertDetail() {
               {availability.map((avail) => {
                 const active = avail.date === activeDateStr;
                 return (
-                  <button
+                  <motion.button
                     key={avail._id}
                     onClick={() => setSelectedDate(avail.date)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition
-                      ${
-                        active
-                          ? 'bg-[var(--color-text-primary)] text-white'
-                          : 'bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]'
-                      }`}
+                    whileTap={{ opacity: 0.6 }}
+                    className={`relative px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                      active
+                        ? 'text-white'
+                        : 'bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]'
+                    }`}
                   >
-                    {formatDate(avail.date)}
-                  </button>
+                    {active && (
+                      <motion.span
+                        layoutId="date-pill"
+                        className="absolute inset-0 bg-[var(--color-text-primary)] rounded-lg"
+                        transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+                      />
+                    )}
+                    <span className="relative z-10">{formatDate(avail.date)}</span>
+                  </motion.button>
                 );
               })}
             </div>
 
-            {activeAvail ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {activeAvail.slots.map((slot) => (
-                  <button
-                    key={slot._id}
-                    disabled={slot.isBooked}
-                    onClick={() => handleBookSlot(slot.time)}
-                    className={`px-4 py-2.5 rounded-xl border text-sm font-medium transition
-                      ${
+            <AnimatePresence mode="wait">
+              {activeAvail ? (
+                <motion.div
+                  key={activeDateStr ?? 'slots'}
+                  variants={slotContainer}
+                  initial="hidden"
+                  animate="show"
+                  exit={{ opacity: 0, transition: { duration: 0.12 } }}
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
+                >
+                  {activeAvail.slots.map((slot) => (
+                    <motion.button
+                      key={slot._id}
+                      variants={slotItem}
+                      disabled={slot.isBooked}
+                      onClick={() => !slot.isBooked && handleBookSlot(slot.time)}
+                      whileTap={slot.isBooked ? undefined : { opacity: 0.7 }}
+                      className={`px-4 py-2.5 rounded-xl border text-sm font-medium transition-colors ${
                         slot.isBooked
                           ? 'bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-secondary)] cursor-not-allowed line-through'
                           : 'bg-white border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)]'
                       }`}
-                  >
-                    {slot.time}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-[var(--color-text-secondary)]">Select a date to view slots.</p>
-            )}
+                    >
+                      {slot.time}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              ) : (
+                <motion.p
+                  key="no-slots"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-sm text-[var(--color-text-secondary)]"
+                >
+                  Select a date to view slots.
+                </motion.p>
+              )}
+            </AnimatePresence>
           </>
         )}
-      </section>
+      </motion.section>
     </div>
   );
 }

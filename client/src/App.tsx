@@ -1,23 +1,43 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'motion/react';
 import Navbar from './components/Layout/Navbar';
 import ExpertListing from './pages/ExpertListing';
 import ExpertDetail from './pages/ExpertDetail';
 import BookingPage from './pages/BookingPage';
 import MyBookings from './pages/MyBookings';
 
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.25, 0.1, 0.25, 1] as const } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.15, ease: [0.25, 0.1, 0.25, 1] as const } },
+};
+
+function PageShell({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+      {children}
+    </motion.div>
+  );
+}
+
 export default function App() {
+  const location = useLocation();
+
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
       <Navbar />
       <main>
-        <Routes>
-          <Route path="/" element={<ExpertListing />} />
-          <Route path="/experts/:id" element={<ExpertDetail />} />
-          <Route path="/experts/:id/book" element={<BookingPage />} />
-          <Route path="/my-bookings" element={<MyBookings />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageShell><ExpertListing /></PageShell>} />
+            <Route path="/experts/:id" element={<PageShell><ExpertDetail /></PageShell>} />
+            <Route path="/experts/:id/book" element={<PageShell><BookingPage /></PageShell>} />
+            <Route path="/my-bookings" element={<PageShell><MyBookings /></PageShell>} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AnimatePresence>
       </main>
     </div>
   );
 }
+
