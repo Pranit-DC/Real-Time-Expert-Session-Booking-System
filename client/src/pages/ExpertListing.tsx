@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useExperts } from '../hooks/useExperts';
 import { useDebounce } from '../hooks/useDebounce';
-import Spinner from '../components/ui/Spinner';
+import Skeleton from '../components/ui/Skeleton';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import Pagination from '../components/ui/Pagination';
 import { ratingLabel } from '../utils/format';
@@ -70,7 +70,7 @@ export default function ExpertListing() {
           value={searchInput}
           onChange={handleSearch}
           placeholder="Search by name or expertise…"
-          className="w-full sm:w-80 px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-white text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-shadow"
+          className="w-full sm:w-80 px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-shadow"
         />
       </motion.div>
 
@@ -90,7 +90,7 @@ export default function ExpertListing() {
               className={`relative px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 active
                   ? 'text-white'
-                  : 'bg-white text-[var(--color-text-secondary)] border border-[var(--color-border)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]'
+                  : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border border-[var(--color-border)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]'
               }`}
             >
               {active && (
@@ -113,9 +113,21 @@ export default function ExpertListing() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex justify-center py-24"
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
-            <Spinner size="lg" />
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-5 space-y-3">
+                <Skeleton className="w-11 h-11 rounded-full" />
+                <Skeleton className="h-3.5 w-3/4" />
+                <Skeleton className="h-3 w-1/3" />
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-5/6" />
+                <div className="flex justify-between pt-1">
+                  <Skeleton className="h-3 w-10" />
+                  <Skeleton className="h-3 w-10" />
+                </div>
+              </div>
+            ))}
           </motion.div>
         )}
 
@@ -146,7 +158,7 @@ export default function ExpertListing() {
                   <motion.div key={expert._id} variants={cardVariant}>
                     <Link
                       to={`/experts/${expert._id}`}
-                      className="group block bg-white rounded-2xl border border-[var(--color-border)] p-5 hover:border-[var(--color-border)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.07)] transition-shadow duration-300"
+                      className="group block bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-5 hover:border-[var(--color-border)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.07)] dark:hover:shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-shadow duration-300"
                     >
                       <div className="w-11 h-11 rounded-full bg-[var(--color-bg)] flex items-center justify-center mb-4 overflow-hidden ring-1 ring-black/5">
                         {expert.avatar ? (
