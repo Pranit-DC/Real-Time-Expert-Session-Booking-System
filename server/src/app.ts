@@ -1,8 +1,7 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import mongoSanitize from 'express-mongo-sanitize';
 import expertRoutes from './routes/expertRoutes';
 import bookingRoutes from './routes/bookingRoutes';
 import errorHandler from './middleware/errorHandler';
@@ -33,8 +32,23 @@ app.use('/api', limiter);
 // 10kb limit — prevents oversized payload attacks
 app.use(express.json({ limit: '10kb' }));
 
-// strip $ and . from inputs — blocks NoSQL injection
-app.use(mongoSanitize());
+// strip keys starting with $ or containing . — blocks NoSQL injection
+// written inline because express-mongo-sanitize reassigns req.query,
+// which Express 5 made a read-only getter
+function stripBadKeys(obj: Record<string, unknown>): void {
+  for (const key of Object.keys(obj)) {
+    if (key.startsWith('$') || key.includes('.')) {
+      delete obj[key];
+    } else if (obj[key] !== null && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+      stripBadKeys(obj[key] as Record<string, unknown>);
+    }
+  }
+}
+app.use((req: Request, _res: Response, next: NextFunction) => {
+  if (req.body && typeof req.body === 'object') stripBadKeys(req.body as Record<string, unknown>);
+  if (req.query && typeof req.query === 'object') stripBadKeys(req.query as Record<string, unknown>);
+  next();
+});
 
 app.use('/api/experts', expertRoutes);
 app.use('/api/bookings', bookingRoutes);
