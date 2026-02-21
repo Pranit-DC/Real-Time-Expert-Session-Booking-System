@@ -86,7 +86,7 @@ export default function ExpertListing() {
         />
       )}
 
-      {data && (
+      {data && Array.isArray(data.experts) && (
         <>
           {data.experts.length === 0 ? (
             <p className="text-center text-[var(--color-text-secondary)] py-24">
