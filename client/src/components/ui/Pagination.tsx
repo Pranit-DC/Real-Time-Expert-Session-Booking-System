@@ -7,7 +7,7 @@ interface PaginationProps {
 }
 
 const btnBase =
-  'px-4 py-1.5 text-sm border border-[var(--color-border)] rounded-lg bg-white text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg)] disabled:opacity-35 disabled:cursor-not-allowed';
+  'px-4 py-1.5 text-sm border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-secondary)] disabled:opacity-35 disabled:cursor-not-allowed';
 
 const Pagination = ({ page, pages, onPageChange }: PaginationProps) => {
   if (pages <= 1) return null;

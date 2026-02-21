@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useBookingsByEmail } from '../hooks/useBookings';
-import Spinner from '../components/ui/Spinner';
+import Skeleton from '../components/ui/Skeleton';
 import Badge from '../components/ui/Badge';
 import { formatDate } from '../utils/format';
 import type { Booking } from '../types';
@@ -63,7 +63,7 @@ export default function MyBookings() {
           onChange={(e) => setEmailInput(e.target.value)}
           placeholder="you@example.com"
           required
-          className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-white text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-shadow"
+          className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-shadow"
         />
         <motion.button
           type="submit"
@@ -81,9 +81,19 @@ export default function MyBookings() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex justify-center py-12"
+            className="space-y-3"
           >
-            <Spinner size="md" />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl px-5 py-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-44" />
+                  </div>
+                  <Skeleton className="h-6 w-16 rounded-full" />
+                </div>
+              </div>
+            ))}
           </motion.div>
         )}
 
@@ -125,7 +135,7 @@ export default function MyBookings() {
                   <motion.li
                     key={booking._id}
                     variants={itemVariant}
-                    className="bg-white border border-[var(--color-border)] rounded-2xl px-5 py-4"
+                    className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl px-5 py-4"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div>

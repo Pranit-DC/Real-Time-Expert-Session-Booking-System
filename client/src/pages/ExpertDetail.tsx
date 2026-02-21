@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useExpert } from '../hooks/useExpert';
 import { useSocket } from '../hooks/useSocket';
-import Spinner from '../components/ui/Spinner';
+import Skeleton from '../components/ui/Skeleton';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import { formatDate, ratingLabel } from '../utils/format';
 import { StarIcon } from '../components/ui/StarIcon';
@@ -34,8 +34,30 @@ export default function ExpertDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center py-32">
-        <Spinner size="lg" />
+      <div className="max-w-3xl mx-auto px-6 py-12 space-y-8">
+        <Skeleton className="h-4 w-32" />
+        <div className="flex items-start gap-5">
+          <Skeleton className="w-16 h-16 rounded-full flex-shrink-0" />
+          <div className="flex-1 space-y-2.5 pt-1">
+            <Skeleton className="h-5 w-48" />
+            <Skeleton className="h-3.5 w-24" />
+            <Skeleton className="h-3.5 w-36" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Skeleton className="h-3.5 w-full" />
+          <Skeleton className="h-3.5 w-full" />
+          <Skeleton className="h-3.5 w-4/5" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-4 w-36" />
+          <div className="flex gap-2">
+            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-8 w-20" />)}
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-10 rounded-xl" />)}
+          </div>
+        </div>
       </div>
     );
   }
@@ -138,7 +160,7 @@ export default function ExpertDetail() {
                     className={`relative px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                       active
                         ? 'text-white'
-                        : 'bg-white border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]'
+                        : 'bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]'
                     }`}
                   >
                     {active && (
@@ -174,7 +196,7 @@ export default function ExpertDetail() {
                       className={`px-4 py-2.5 rounded-xl border text-sm font-medium transition-colors ${
                         slot.isBooked
                           ? 'bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-secondary)] cursor-not-allowed line-through'
-                          : 'bg-white border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)]'
+                          : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)]'
                       }`}
                     >
                       {slot.time}

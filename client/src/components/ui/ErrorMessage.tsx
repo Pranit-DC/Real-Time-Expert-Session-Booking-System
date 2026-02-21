@@ -12,7 +12,7 @@ const ErrorMessage = ({ message, onRetry }: ErrorMessageProps) => {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
-      className="px-5 py-4 bg-red-50 border border-red-200 rounded-[10px] text-center"
+      className="px-5 py-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-[10px] text-center"
     >
       <p className="text-sm text-[var(--color-error)] m-0">{message}</p>
       {onRetry && (
