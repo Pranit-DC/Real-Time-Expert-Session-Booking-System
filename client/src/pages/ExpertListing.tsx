@@ -89,7 +89,7 @@ export default function ExpertListing() {
               whileTap={{ opacity: 0.6 }}
               className={`relative px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 active
-                  ? 'text-white'
+                  ? 'text-[var(--color-bg)]'
                   : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border border-[var(--color-border)] hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]'
               }`}
             >
@@ -116,7 +116,7 @@ export default function ExpertListing() {
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-5 space-y-3">
+              <div key={i} className="bg-[var(--color-surface)] rounded-2xl p-5 space-y-3">
                 <Skeleton className="w-11 h-11 rounded-full" />
                 <Skeleton className="h-3.5 w-3/4" />
                 <Skeleton className="h-3 w-1/3" />
@@ -158,7 +158,7 @@ export default function ExpertListing() {
                   <motion.div key={expert._id} variants={cardVariant}>
                     <Link
                       to={`/experts/${expert._id}`}
-                      className="group block bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-5 hover:border-[var(--color-border)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.07)] dark:hover:shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-shadow duration-300"
+                      className="group block bg-[var(--color-surface)] rounded-2xl p-5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.07)] dark:hover:shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-shadow duration-300"
                     >
                       <div className="w-11 h-11 rounded-full bg-[var(--color-bg)] flex items-center justify-center mb-4 overflow-hidden ring-1 ring-black/5">
                         {expert.avatar ? (
